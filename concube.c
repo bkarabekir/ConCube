@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     /* check */
     if (argc == 6 && true != 1) errMsg(USAGE)
 
-    char *inExt, *outExt;
+    char *inExt = NULL, *outExt = NULL;
 
     if (inputFile) {
         if (access(inputFile, F_OK) == -1) {
@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
         }
 
         if (outputFile) {
-            printf("strlen(outputFile): %d\n", strlen(outputFile));
             for (int i = 0; i < strlen(outputFile); i++) {
                 if (outputFile[i] == '.') {
                     outExt = outputFile + (i + 1);
@@ -62,7 +61,11 @@ int main(int argc, char *argv[])
     } else {errMsg(USAGE)}
 
     if (!inExt && !(outExt || type)) {errMsg(USAGE)}
-
+    /*  debug
+     * printf("inEXT: %s\n", inExt);
+    printf("input: %s\n", inputFile);
+    printf("outEXT: %s\n", outExt);
+    printf("output: %s\n", outputFile);*/
     if (!strcmp(inExt, "xml")) {
         if (!strcmp(outExt, "csv") || !strcmp(type, "csv")) {
 
@@ -76,6 +79,7 @@ int main(int argc, char *argv[])
     } else if (!strcmp(inExt, "csv")) {
         if (!strcmp(outExt, "xml") || !strcmp(type, "xml")) {
 
+            //printf("output: %s\n", outputFile);
             csv_to_xml(inputFile, (outputFile ?: "out.xml"), true);
 
 

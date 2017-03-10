@@ -17,7 +17,7 @@ void xml_controller(xmlNode *a_node)
     xmlNode *cur_node = NULL;
     int flag = 1;
     int pcount = 1;
-    int fcount = 0;
+    int fcount = 0; /*field counter*/
     for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
         if (cur_node->type == XML_ELEMENT_NODE) {
 
@@ -29,12 +29,12 @@ void xml_controller(xmlNode *a_node)
             if (flag) {
                 for (int i = 0; i < FIELDSIZE; i++) {
                     if (field[i] == NULL) {
-                        field[i] = (char *) malloc(strlen(cur_node->name) * sizeof(char));
-                        strcpy(field[i], cur_node->name);
+                        field[i] = (char *) malloc(strlen((char*)cur_node->name) * sizeof(char));
+                        strcpy(field[i], (char*)cur_node->name);
                         fcount++;
                         //printf("field: %s\n", field[i]);
                         break;
-                    } else if (!strcmp(field[i], cur_node->name)) {
+                    } else if (!strcmp(field[i], (char*)cur_node->name)) {
                         if (i == 0) {
                             flag = 0;
                             break;
@@ -42,12 +42,15 @@ void xml_controller(xmlNode *a_node)
                     }
                 }
             } else {
-                if (strcmp(cur_node->name, field[pcount])) {
-                    //printf("%s : %s\n", field[pcount], cur_node->name);
+                //printf("%s\n\n\n%s*\n",cur_node->name,field[pcount]);
+                if (field[pcount] == NULL) {pcount = 0;}
+                if (strcmp((char*)cur_node->name, field[pcount])) {
+                    printf("%s : %s\n", field[pcount], cur_node->name);
                     errMsg(XMLSTRUCTURE)
                 }
                 pcount++;
             }
+            if (pcount > FIELDSIZE) {errMsg(XMLSTRUCTURE)}
         }
         xml_controller(cur_node->children);
     }
@@ -86,6 +89,8 @@ void csv_writer(xmlNode *a_node, const char *outFile)
 
 void xml_to_csv(const char *filename, const char *outFile)
 {
+    //log_info("xml_to_csv");
+
     xmlDoc *doc = NULL;
     const char *Filename = filename;
     doc = xmlReadFile(Filename, NULL, 0);
@@ -129,7 +134,7 @@ void csv_to_xml(const char *filename, const char *out_file, int true)
 {
     FILE *fp;
     fp = fopen(filename, "r");
-    xmlDocPtr doc = xmlNewDoc(BAD_CAST "2.0");      /* document pointer */
+    xmlDocPtr doc = xmlNewDoc(BAD_CAST "1.0");      /* document pointer */
     xmlNodePtr root_node = xmlNewNode(NULL, BAD_CAST "root"); /* node pointers */
 
     xmlDocSetRootElement(doc, root_node);
