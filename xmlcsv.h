@@ -7,4 +7,6 @@
 
 #endif //CONCUBE_CONVERTER_H
 
-void xmlToCsv(const char*);
+#include <libxml/tree.h>
+void xml_to_csv(const char *, const char *);
+void csv_to_xml(const char *, const char *, int);

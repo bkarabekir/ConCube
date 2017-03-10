@@ -2,20 +2,17 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <errno.h>
+#include "xmlcsv.h"
+#include "debug.h"
 
-#include "converter.h"
-
-#define USAGE "Usage: concube [-i <input filename>] [-o <output filename>] [-true] [-t <output format>]\n"
-#define errMsg(msg) {fprintf(stderr, "%s",msg); exit(EXIT_FAILURE);}
-
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
 
     if (argc < 5 || argc > 6) errMsg(USAGE)
 
     char *inputFile = NULL;
     char *outputFile = NULL;
-    char *type;
+    char *type = NULL;
     int true = 0;
 
     for (int i = 1; i < argc; i++) {
@@ -35,19 +32,28 @@ int main(int argc, char *argv[]) {
     /* check */
     if (argc == 6 && true != 1) errMsg(USAGE)
 
-    char *inExt, *outExt, *outType, *fileName;
+    char *inExt, *outExt;
 
     if (inputFile) {
         if (access(inputFile, F_OK) == -1) {
             errMsg("Input file does not exist")
         }
 
-        fileName = strtok(inputFile, ".");
-        inExt = strtok(NULL, "\0");
+        for (int i = 0; i < strlen(inputFile); i++) {
+            if (inputFile[i] == '.') {
+                inExt = inputFile + (i + 1);
+                break;
+            }
+        }
 
         if (outputFile) {
-            strtok(outputFile, ".");
-            outExt = strtok(NULL, "\0");
+            printf("strlen(outputFile): %d\n", strlen(outputFile));
+            for (int i = 0; i < strlen(outputFile); i++) {
+                if (outputFile[i] == '.') {
+                    outExt = outputFile + (i + 1);
+                    break;
+                }
+            }
 
         } else if (!type) {
             errMsg(USAGE)
@@ -55,23 +61,28 @@ int main(int argc, char *argv[]) {
 
     } else {errMsg(USAGE)}
 
+    if (!inExt && !(outExt || type)) {errMsg(USAGE)}
+
     if (!strcmp(inExt, "xml")) {
         if (!strcmp(outExt, "csv") || !strcmp(type, "csv")) {
 
-            xmlToCsv(fileName);
+            xml_to_csv(inputFile, (outputFile ?: "out.csv"));
 
         } else if (!strcmp(outExt, "json") || !strcmp(type, "json")) {
             printf("json has been not implemented yet");
         }
 
 
-    } else if(!strcmp(inExt, "csv")) {
+    } else if (!strcmp(inExt, "csv")) {
         if (!strcmp(outExt, "xml") || !strcmp(type, "xml")) {
-            printf("outExt tpye xml");
+
+            csv_to_xml(inputFile, (outputFile ?: "out.xml"), true);
+
+
         } else if (!strcmp(outExt, "json") || !strcmp(type, "json")) {
             printf("json has been not implemented yet");
         }
-    } else if(!strcmp(inExt, "json")) {
+    } else if (!strcmp(inExt, "json")) {
         if (!strcmp(outExt, "xml") || !strcmp(type, "xml")) {
             printf("json has been not implemented yet");
         } else if (!strcmp(outExt, "csv") || !strcmp(type, "csv")) {
@@ -80,7 +91,7 @@ int main(int argc, char *argv[]) {
     } else errMsg("Extension is invalid")
 
 
-
     printf("\nsusscess\n");
     return 0;
+
 }

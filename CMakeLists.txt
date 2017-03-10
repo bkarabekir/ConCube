@@ -7,5 +7,5 @@ find_package(LibXml2)
 include_directories(${LIBXML2_INCLUDE_DIR})
 
 
-set(SOURCE_FILES concube.c converter.c)
+set(SOURCE_FILES concube.c xmlcsv.c xmlcsv.h)
 add_executable(concube ${SOURCE_FILES})
