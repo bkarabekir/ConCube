@@ -29,12 +29,12 @@ void xml_controller(xmlNode *a_node)
             if (flag) {
                 for (int i = 0; i < FIELDSIZE; i++) {
                     if (field[i] == NULL) {
-                        field[i] = (char *) malloc(strlen((char*)cur_node->name) * sizeof(char));
-                        strcpy(field[i], (char*)cur_node->name);
+                        field[i] = (char *) malloc(strlen((char *) cur_node->name) * sizeof(char));
+                        strcpy(field[i], (char *) cur_node->name);
                         fcount++;
                         //printf("field: %s\n", field[i]);
                         break;
-                    } else if (!strcmp(field[i], (char*)cur_node->name)) {
+                    } else if (strcmp(field[i], (char *) cur_node->name) == 0) {
                         if (i == 0) {
                             flag = 0;
                             break;
@@ -43,8 +43,8 @@ void xml_controller(xmlNode *a_node)
                 }
             } else {
                 //printf("%s\n\n\n%s*\n",cur_node->name,field[pcount]);
-                if (field[pcount] == NULL) {pcount = 0;}
-                if (strcmp((char*)cur_node->name, field[pcount])) {
+                if (field[pcount] == NULL) { pcount = 0; }
+                if (strcmp((char *) cur_node->name, field[pcount])) {
                     printf("%s : %s\n", field[pcount], cur_node->name);
                     errMsg(XMLSTRUCTURE)
                 }
@@ -143,7 +143,7 @@ void csv_to_xml(const char *filename, const char *out_file, int true)
     int nf, prevnf = 0;
     /* spacer */
     prevnf = csvgetline(fp);
-    if (!prevnf) errMsg("csv format error")
+    if (prevnf == 0) errMsg("csv format error")
     char *tag[prevnf];
 
     for (int k = 0; k < prevnf; ++k) {
