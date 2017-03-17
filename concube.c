@@ -2,17 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "xmlcsv.h"
-#include "debug.h"
+#include "fromxml.h"
+#include "fromjson.h"
+#include "fromcsv.h"
+#include "message.h"
 
 int main(int argc, char *argv[])
 {
 
-    if (argc < 5 || argc > 6) errMsg(USAGE)
+    if (argc < 5 || argc > 6) errMsg(USAGE);
 
     char *inputFile = NULL;
     char *outputFile = NULL;
-    char *type = NULL;
+    char tmp = '\0';
+    char *type = &tmp;
     int true = 0;
 
     for (int i = 1; i < argc; i++) {
@@ -61,11 +64,7 @@ int main(int argc, char *argv[])
     } else {errMsg(USAGE)}
 
     if (!inExt && !(outExt || type)) {errMsg(USAGE)}
-    /*  debug
-     * printf("inEXT: %s\n", inExt);
-    printf("input: %s\n", inputFile);
-    printf("outEXT: %s\n", outExt);
-    printf("output: %s\n", outputFile);*/
+
     if (!strcmp(inExt, "xml")) {
         if (!strcmp(outExt, "csv") || !strcmp(type, "csv")) {
 
@@ -79,18 +78,18 @@ int main(int argc, char *argv[])
     } else if (!strcmp(inExt, "csv")) {
         if (!strcmp(outExt, "xml") || !strcmp(type, "xml")) {
 
-            //printf("output: %s\n", outputFile);
             csv_to_xml(inputFile, (outputFile ?: "out.xml"), true);
-
 
         } else if (!strcmp(outExt, "json") || !strcmp(type, "json")) {
             printf("json has been not implemented yet");
         }
     } else if (!strcmp(inExt, "json")) {
         if (!strcmp(outExt, "xml") || !strcmp(type, "xml")) {
-            printf("json has been not implemented yet");
+
+            json_to_xml(inputFile, (outputFile ?: "out.csv"), true);
+
         } else if (!strcmp(outExt, "csv") || !strcmp(type, "csv")) {
-            printf("json has been not implemented yet");
+            json_to_csv(inputFile, outputFile);
         }
     } else errMsg("Extension is invalid")
 
