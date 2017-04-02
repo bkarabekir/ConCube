@@ -7,12 +7,6 @@
 #include <json-c/json.h>
 #include "debug.h"
 
-
-//int main()
-//{
-//    json_to_xml("a.json", "aaaa", 1);
-//}
-
 void j_xml_writer(json_object *jobj, xmlNodePtr parent, int true);
 
 void json_parse(json_object *jobj, xmlNodePtr root_node, int true)
@@ -62,9 +56,9 @@ void j_xml_writer(json_object *jobj, xmlNodePtr parent, int true)
     }
 }
 
-void json_to_xml(char *input, char const *out_name, int true)
+void json_to_xml(char *filename, char const *out_name, int true)
 {
-    json_object *read_obj = json_object_from_file(input);
+    json_object *read_obj = json_object_from_file(filename);
 
     xmlDocPtr doc = NULL;
     doc = xmlNewDoc(BAD_CAST "1.0");
@@ -145,10 +139,10 @@ void j_parse_csv(json_object *jobj, FILE *fp)
     }
 }
 
-void json_to_csv(char const *input_name, char const *output_name)
+void json_to_csv(char const *input_name, char const *out_name)
 {
     FILE *fp;
-    fp = fopen(output_name, "w");
+    fp = fopen(out_name, "w");
 
     json_object *read_obj = json_object_from_file(input_name);
     json_object *jobj = json_tokener_parse(json_object_get_string(read_obj));

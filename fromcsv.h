@@ -7,5 +7,6 @@
 
 #endif //CONCUBE_FROMCSV_H
 
-void csv_to_xml(const char *, const char *, int);
+void csv_to_xml(const char *filename, const char *out_file, int true);
 
+void csv_to_json(const char *filename, const char *out_name);

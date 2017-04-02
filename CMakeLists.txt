@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.6)
 project(concube)
 
-set(CMAKE_C_STANDARD 99)
+set(CMAKE_C_STANDARD 11)
 
 find_package(LibXml2)
 include_directories(${LIBXML2_INCLUDE_DIR})

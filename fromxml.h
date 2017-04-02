@@ -8,4 +8,6 @@
 #endif //CONCUBE_CONVERTER_H
 
 
-void xml_to_csv(const char *, const char *);
+void xml_to_csv(const char *filename, const char *out_name);
+
+void xml_to_json(const char *filename, const char *out_name);
